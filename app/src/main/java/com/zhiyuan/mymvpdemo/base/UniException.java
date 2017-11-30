@@ -1,12 +1,17 @@
 package com.zhiyuan.mymvpdemo.base;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.zhiyuan.mymvpdemo.MainActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,7 +43,15 @@ public class UniException implements Thread.UncaughtExceptionHandler {
                 Log.e(TAG,"error : " + e.getMessage());
             }
             // 退出程序
+            // 重启
+            Intent intent = new Intent(AppOS.appOS, MainActivity.class);
+            PendingIntent restartIntent = PendingIntent.getActivity(AppOS.appOS, 0, intent,
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            AlarmManager mgr = (AlarmManager) AppOS.appOS.getSystemService(Context.ALARM_SERVICE);
+            // 设置1毫秒后重启应
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 10000, restartIntent);
             android.os.Process.killProcess(android.os.Process.myPid());
+            //结束进程
             System.exit(1);
         }
     }
@@ -59,6 +72,7 @@ public class UniException implements Thread.UncaughtExceptionHandler {
         }.start();
         // 收集设备参数信息
         collectDeviceInfo(AppOS.appOS);
+
         // 保存日志文件
         try {
             File file = new File("error");
