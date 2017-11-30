@@ -20,7 +20,7 @@ public class ApiClient {
        retrofit=new Retrofit.Builder()
                .addConverterFactory(GsonConverterFactory.create())
                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-               .baseUrl(ApiService.API_SERVER_URL)
+             //  .baseUrl(ApiService.API_SERVER_URL)
                .client(builder.build())
                .build();
       }
